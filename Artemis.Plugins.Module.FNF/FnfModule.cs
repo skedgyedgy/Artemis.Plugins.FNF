@@ -28,7 +28,7 @@ namespace Artemis.Plugins.Module.FNF {
                 DataModel.BackgroundColor = val;
             });
 
-            JsonPluginEndPoint<FnfSongData> songDataEndpoint = webServerService.AddJsonEndPoint<FnfSongData> (this, "SongData", d => DataModel.SongData = d);
+            JsonPluginEndPoint<FnfSongData> songDataEndpoint = webServerService.AddJsonEndPoint<FnfSongData> (this, "SetSongData", d => DataModel.SongData = d);
             songDataEndpoint.RequestException += JsonPluginEndPointOnRequestException;
         }
 
