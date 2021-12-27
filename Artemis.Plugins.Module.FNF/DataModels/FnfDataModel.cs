@@ -7,12 +7,12 @@ namespace Artemis.Plugins.Module.FNF.DataModels {
             //PluginSubDataModel = new FnfSubDataModel ();
         }
 
+        [DataModelProperty (Name = "Player health", Description = "How much health boyfriend has.")]
+        public float BoyfriendHealth { get; set; }
+
         public FnfSongData SongData { get; set; }
 
-        /*// Your datamodel can have regular properties and you can annotate them if you'd like
-        [DataModelProperty (Name = "Player health", Description = "How much health boyfriend has.")]
-        public int BoyfriendHealth { get; set; }
-
+        /*
         // You can even have classes in your datamodel, just don't forget to instantiate them ;)
         [DataModelProperty (Name = "A class within the datamodel")]
         public FnfSubDataModel PluginSubDataModel { get; set; }*/

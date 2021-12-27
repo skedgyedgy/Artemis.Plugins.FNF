@@ -17,6 +17,12 @@ namespace Artemis.Plugins.Module.FNF {
         }
 
         public override void Enable () {
+            webServerService.AddStringEndPoint (this, "SetHealth", h => {
+                float val = DataModel.BoyfriendHealth;
+                float.TryParse (h, out val);
+                DataModel.BoyfriendHealth = val;
+            });
+
             JsonPluginEndPoint<FnfSongData> songDataEndpoint = webServerService.AddJsonEndPoint<FnfSongData> (this, "SongData", d => DataModel.SongData = d);
             songDataEndpoint.RequestException += JsonPluginEndPointOnRequestException;
         }
