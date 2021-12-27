@@ -22,7 +22,11 @@ namespace Artemis.Plugins.Module.FNF {
                 float.TryParse (h, out val);
                 DataModel.BoyfriendHealth = val;
             });
-            webServerService.AddStringEndPoint (this, "SetBackgroundHex", h => DataModel.BackgroundColor = h);
+            webServerService.AddStringEndPoint (this, "SetBackgroundHex", h => {
+                SKColor val = DataModel.BackgroundColor;
+                SKColor.TryParse (h, out val);
+                DataModel.BackgroundColor = val;
+            });
 
             JsonPluginEndPoint<FnfSongData> songDataEndpoint = webServerService.AddJsonEndPoint<FnfSongData> (this, "SongData", d => DataModel.SongData = d);
             songDataEndpoint.RequestException += JsonPluginEndPointOnRequestException;
