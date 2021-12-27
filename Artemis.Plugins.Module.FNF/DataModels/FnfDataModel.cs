@@ -1,5 +1,4 @@
 ﻿using Artemis.Core.Modules;
-using System.Collections.Generic;
 
 namespace Artemis.Plugins.Module.FNF.DataModels {
     public class FnfDataModel : DataModel {
