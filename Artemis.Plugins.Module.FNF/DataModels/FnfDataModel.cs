@@ -8,6 +8,8 @@ namespace Artemis.Plugins.Module.FNF.DataModels {
 
         [DataModelProperty (Name = "Player health", Description = "How much health boyfriend has.")]
         public float BoyfriendHealth { get; set; }
+        [DataModelProperty (Name = "Background color", Description = "The background color on main menus, also used for unconfigured songs.")]
+        public string BackgroundColor { get; set; }
 
         public FnfSongData SongData { get; set; }
 
