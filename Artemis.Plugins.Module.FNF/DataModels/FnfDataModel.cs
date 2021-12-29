@@ -46,6 +46,10 @@ namespace Artemis.Plugins.Module.FNF.DataModels {
         [DataModelProperty (Name = "Fade to black")]
         public bool FadeToBlack { get; set; } = false;
 
+        [DataModelProperty (Name = "On beat")]
+        public DataModelEvent OnBeat { get; } = new DataModelEvent ();
+        [DataModelProperty (Name = "On measure")]
+        public DataModelEvent OnMeasure { get; } = new DataModelEvent ();
         [DataModelProperty (Name = "On blammed light")]
         public DataModelEvent OnBlammedLights { get; } = new DataModelEvent ();
         [DataModelProperty (Name = "On flash")]
