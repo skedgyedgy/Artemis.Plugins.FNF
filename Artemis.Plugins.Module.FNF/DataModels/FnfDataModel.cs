@@ -21,7 +21,7 @@ namespace Artemis.Plugins.Module.FNF.DataModels {
         [DataModelProperty (Name = "Beat number", Description = "The current beat of the song.")]
         public int BeatNumber { get; set; }
         [DataModelProperty (Name = "Measure number", Description = "The current measure of the song.")]
-        public int MeasuerNumber { get; set; }
+        public int MeasureNumber { get; set; }
 
         [DataModelProperty (Name = "Player health", Description = "How much health boyfriend has.")]
         public float BoyfriendHealth { get; set; }

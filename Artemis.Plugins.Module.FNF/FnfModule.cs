@@ -29,9 +29,9 @@ namespace Artemis.Plugins.Module.FNF {
                 DataModel.BeatNumber = val;
             });
             webServerService.AddStringEndPoint (this, "SetMeasure", h => {
-                int val = DataModel.MeasuerNumber;
+                int val = DataModel.MeasureNumber;
                 int.TryParse (h, out val);
-                DataModel.MeasuerNumber = val;
+                DataModel.MeasureNumber = val;
             });
 
             webServerService.AddStringEndPoint (this, "SetHealth", h => {
