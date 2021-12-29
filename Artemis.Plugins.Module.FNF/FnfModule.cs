@@ -60,6 +60,33 @@ namespace Artemis.Plugins.Module.FNF {
                 SKColor.TryParse (h, out val);
                 DataModel.BackgroundColor = val;
             });
+            webServerService.AddStringEndPoint (this, "SetAccent1Hex", h => {
+                SKColor val = DataModel.AccentColor1;
+                SKColor.TryParse (h, out val);
+                DataModel.AccentColor1 = val;
+            });
+            webServerService.AddStringEndPoint (this, "SetAccent2Hex", h => {
+                SKColor val = DataModel.AccentColor2;
+                SKColor.TryParse (h, out val);
+                DataModel.AccentColor2 = val;
+            });
+            webServerService.AddStringEndPoint (this, "SetBlammedHex", h => {
+                SKColor val = DataModel.BlammedLights;
+                SKColor.TryParse (h, out val);
+                DataModel.BlammedLights = val;
+                DataModel.OnBlammedLights.Trigger ();
+            });
+            webServerService.AddStringEndPoint (this, "FlashColorHex", h => {
+                SKColor val = DataModel.FlashColor;
+                SKColor.TryParse (h, out val);
+                DataModel.FlashColor = val;
+                DataModel.OnFlash.Trigger ();
+            });
+            webServerService.AddStringEndPoint (this, "FadeToBlack", h => {
+                bool val = DataModel.FadeToBlack;
+                bool.TryParse (h, out val);
+                DataModel.FadeToBlack = val;
+            });
         }
 
         public override void Disable () {

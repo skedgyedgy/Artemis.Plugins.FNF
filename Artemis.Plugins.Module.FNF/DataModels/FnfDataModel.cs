@@ -1,4 +1,5 @@
-﻿using Artemis.Core.Modules;
+﻿using Artemis.Core;
+using Artemis.Core.Modules;
 using SkiaSharp;
 
 namespace Artemis.Plugins.Module.FNF.DataModels {
@@ -34,6 +35,21 @@ namespace Artemis.Plugins.Module.FNF.DataModels {
 
         [DataModelProperty (Name = "Background color", Description = "The background color on main menus, also used for unconfigured songs.")]
         public SKColor BackgroundColor { get; set; } = SKColor.Empty;
+        [DataModelProperty (Name = "Accent color 1 ")]
+        public SKColor AccentColor1 { get; set; } = SKColor.Empty;
+        [DataModelProperty (Name = "Accent color 2")]
+        public SKColor AccentColor2 { get; set; } = SKColor.Empty;
+        [DataModelProperty (Name = "Blammed lights", Description = "The color fade during Blammed and all other stages that use it.")]
+        public SKColor BlammedLights { get; set; } = SKColor.Empty;
+        [DataModelProperty (Name = "Flash color")]
+        public SKColor FlashColor { get; set; } = SKColor.Empty;
+        [DataModelProperty (Name = "Fade to black")]
+        public bool FadeToBlack { get; set; } = false;
+
+        [DataModelProperty (Name = "On blammed light")]
+        public DataModelEvent OnBlammedLights { get; } = new DataModelEvent ();
+        [DataModelProperty (Name = "On flash")]
+        public DataModelEvent OnFlash { get; } = new DataModelEvent ();
 
         /*
         // You can even have classes in your datamodel, just don't forget to instantiate them ;)
