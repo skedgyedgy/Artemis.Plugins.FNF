@@ -17,77 +17,113 @@ namespace Artemis.Plugins.Module.FNF {
         }
 
         public override void Enable () {
-            webServerService.AddStringEndPoint (this, "SetGameState", h => DataModel.GameState = h);
-            webServerService.AddStringEndPoint (this, "SetStageName", h => DataModel.StageName = h);
-            webServerService.AddStringEndPoint (this, "SetModName", h => DataModel.ModName = h);
+            webServerService.AddStringEndPoint (this, "SetGameState", h => {
+                DataModel.GameState.GameState = h;
+                if (h == "dead") DataModel.GameState.OnBlueBalled.Trigger ();
+            });
+            webServerService.AddStringEndPoint (this, "SetModName", h => DataModel.GameState.ModName = h);
 
-            JsonPluginEndPoint<FnfSongData> songDataEndpoint = webServerService.AddJsonEndPoint<FnfSongData> (this, "SetSongData", d => DataModel.SongData = d);
-            songDataEndpoint.RequestException += JsonPluginEndPointOnRequestException;
+            webServerService.AddStringEndPoint (this, "SetStageName", h => DataModel.SongData.StageName = h);
+            webServerService.AddStringEndPoint (this, "SetIsPixelStage", h => {
+                bool val = DataModel.SongData.IsPixelStage;
+                bool.TryParse (h, out val);
+                DataModel.SongData.IsPixelStage = val;
+            });
+
             webServerService.AddStringEndPoint (this, "SetBeat", h => {
-                int val = DataModel.BeatNumber;
+                int val = DataModel.SongData.BeatNumber;
                 int.TryParse (h, out val);
-                DataModel.BeatNumber = val;
-                DataModel.OnBeat.Trigger ();
-            });
-            webServerService.AddStringEndPoint (this, "SetMeasure", h => {
-                int val = DataModel.MeasureNumber;
-                int.TryParse (h, out val);
-                DataModel.MeasureNumber = val;
-                DataModel.OnMeasure.Trigger ();
-            });
 
-            webServerService.AddStringEndPoint (this, "SetHealth", h => {
-                float val = DataModel.BoyfriendHealth;
-                float.TryParse (h, out val);
-                DataModel.BoyfriendHealth = val;
+                if (val > DataModel.SongData.BeatNumber) {
+                    DataModel.SongData.OnBeat.Trigger ();
+                    if (val % 4 == 0) DataModel.SongData.OnMeasure.Trigger ();
+                }
+
+                DataModel.SongData.BeatNumber = val;
             });
-            webServerService.AddStringEndPoint (this, "SetCombo", h => {
-                int val = DataModel.CurrentCombo;
-                int.TryParse (h, out val);
-                DataModel.CurrentCombo = val;
+            webServerService.AddStringEndPoint (this, "SetHealth", h => {
+                float val = DataModel.SongData.BoyfriendHealth;
+                float.TryParse (h, out val);
+                DataModel.SongData.BoyfriendHealth = val;
             });
             webServerService.AddStringEndPoint (this, "SetRating", h => {
-                float val = DataModel.RatingPercentage;
+                float val = DataModel.SongData.RatingPercentage;
                 float.TryParse (h, out val);
-                DataModel.RatingPercentage = val;
+                DataModel.SongData.RatingPercentage = val;
             });
-            webServerService.AddStringEndPoint (this, "SetFullCombo", h => {
-                bool val = DataModel.FullCombo;
-                bool.TryParse (h, out val);
-                DataModel.FullCombo = val;
+            webServerService.AddStringEndPoint (this, "SetCombo", h => {
+                int val = DataModel.SongData.CurrentCombo;
+                int.TryParse (h, out val);
+                DataModel.SongData.CurrentCombo = val;
+            });
+            webServerService.AddStringEndPoint (this, "StartSong", h => {
+                DataModel.SongData.FullCombo = true;
+                DataModel.SongData.CurrentCombo = 0;
+                DataModel.GameState.OnSongStarted.Trigger ();
+                // DataModel.GameState.OnSongStarted.Trigger (new SongStartedEventArguments ());
+            });
+            webServerService.AddStringEndPoint (this, "BreakCombo", h => {
+                DataModel.SongData.OnComboBroken.Trigger (new ComboBreakEventArgs (DataModel.SongData.CurrentCombo, DataModel.SongData.FullCombo));
+                DataModel.SongData.FullCombo = false;
+                DataModel.SongData.CurrentCombo = 0;
             });
 
-            webServerService.AddStringEndPoint (this, "SetBackgroundHex", h => {
-                SKColor val = DataModel.BackgroundColor;
+            webServerService.AddStringEndPoint (this, "SetDadHex", h => {
+                SKColor val = DataModel.Colors.DadHealthColor;
                 SKColor.TryParse (h, out val);
-                DataModel.BackgroundColor = val;
+                DataModel.Colors.DadHealthColor = val;
+            });
+            webServerService.AddStringEndPoint (this, "SetBFHex", h => {
+                SKColor val = DataModel.Colors.BfHealthColor;
+                SKColor.TryParse (h, out val);
+                DataModel.Colors.BfHealthColor = val;
+            });
+            webServerService.AddStringEndPoint (this, "SetBackgroundHex", h => {
+                SKColor val = DataModel.Colors.BackgroundColor;
+                SKColor.TryParse (h, out val);
+                DataModel.Colors.BackgroundColor = val;
             });
             webServerService.AddStringEndPoint (this, "SetAccent1Hex", h => {
-                SKColor val = DataModel.AccentColor1;
+                SKColor val = DataModel.Colors.AccentColor1;
                 SKColor.TryParse (h, out val);
-                DataModel.AccentColor1 = val;
+                DataModel.Colors.AccentColor1 = val;
             });
             webServerService.AddStringEndPoint (this, "SetAccent2Hex", h => {
-                SKColor val = DataModel.AccentColor2;
+                SKColor val = DataModel.Colors.AccentColor2;
                 SKColor.TryParse (h, out val);
-                DataModel.AccentColor2 = val;
+                DataModel.Colors.AccentColor2 = val;
+            });
+            webServerService.AddStringEndPoint (this, "SetAccent3Hex", h => {
+                SKColor val = DataModel.Colors.AccentColor3;
+                SKColor.TryParse (h, out val);
+                DataModel.Colors.AccentColor3 = val;
+            });
+            webServerService.AddStringEndPoint (this, "SetAccent4Hex", h => {
+                SKColor val = DataModel.Colors.AccentColor4;
+                SKColor.TryParse (h, out val);
+                DataModel.Colors.AccentColor4 = val;
             });
             webServerService.AddStringEndPoint (this, "SetBlammedHex", h => {
-                SKColor val = DataModel.BlammedLights;
+                SKColor val = DataModel.Colors.BlammedLights;
                 SKColor.TryParse (h, out val);
-                DataModel.BlammedLights = val;
-                DataModel.OnBlammedLights.Trigger ();
+                DataModel.Colors.BlammedLights = val;
+                DataModel.Colors.OnBlammedLights.Trigger ();
             });
             webServerService.AddStringEndPoint (this, "FlashColorHex", h => {
-                SKColor val = DataModel.FlashColor;
+                SKColor val = DataModel.Colors.FlashColor;
                 SKColor.TryParse (h, out val);
-                DataModel.FlashColor = val;
-                DataModel.OnFlash.Trigger ();
+                DataModel.Colors.FlashColor = val;
+                DataModel.Colors.OnFlash.Trigger ();
             });
-            webServerService.AddStringEndPoint (this, "FadeToBlack", h => {
-                bool val = DataModel.FadeToBlack;
+            webServerService.AddStringEndPoint (this, "SetFadeHex", h => {
+                SKColor val = DataModel.Colors.FadeColor;
+                SKColor.TryParse (h, out val);
+                DataModel.Colors.FadeColor = val;
+            });
+            webServerService.AddStringEndPoint (this, "ToggleFade", h => {
+                bool val = DataModel.Colors.Fade;
                 bool.TryParse (h, out val);
-                DataModel.FadeToBlack = val;
+                DataModel.Colors.Fade = val;
             });
         }
 

@@ -1,69 +1,44 @@
-﻿using Artemis.Core.Modules;
+﻿using Artemis.Core;
+using Artemis.Core.Modules;
 using SkiaSharp;
 
 namespace Artemis.Plugins.Module.FNF.DataModels {
-    public class FnfSongData {
-        public SKColor DadHealthColor { get; set; } = new SKColor (0xB7, 0xD8, 0x55, 0xFF);
-        [DataModelIgnore]
-        public string DadHealthHex {
-            get => DadHealthColor.ToString ();
-            set {
-                SKColor val = DadHealthColor;
-                SKColor.TryParse (value, out val);
-                DadHealthColor = val;
-            }
-        }
+    public class FNFSongData {
+        [DataModelProperty (Name = "Stage name", Description = "The name of the current song's stage")]
+        public string StageName { get; set; } = "stage";
+        [DataModelProperty (Name = "Is pixel stage", Description = "Whether the stage is a pixel stage or not")]
+        public bool IsPixelStage { get; set; } = false;
 
-        public SKColor BfHealthColor { get; set; } = new SKColor (0x31, 0xB0, 0xD1, 0xFF);
-        [DataModelIgnore]
-        public string BfHealthHex {
-            get => BfHealthColor.ToString ();
-            set {
-                SKColor val = BfHealthColor;
-                SKColor.TryParse (value, out val);
-                BfHealthColor = val;
-            }
-        }
+        [DataModelProperty (Name = "Beat number", Description = "The current beat of the song.")]
+        public int BeatNumber { get; set; }
+        [DataModelProperty (Name = "Measure number", Description = "The current measure of the song (assuming it is 4/4 time).")]
+        public int MeasureNumber => BeatNumber / 4;
 
-        public SKColor LeftNoteColor { get; set; } = new SKColor (0xC2, 0x4B, 0x99, 0xFF);
-        [DataModelIgnore]
-        public string LeftNoteHex {
-            get => LeftNoteColor.ToString ();
-            set {
-                SKColor val = LeftNoteColor;
-                SKColor.TryParse (value, out val);
-                LeftNoteColor = val;
-            }
-        }
-        public SKColor DownNoteColor { get; set; } = new SKColor (0x00, 0xFF, 0xFF, 0xFF);
-        [DataModelIgnore]
-        public string NoteHex {
-            get => DownNoteColor.ToString ();
-            set {
-                SKColor val = DownNoteColor;
-                SKColor.TryParse (value, out val);
-                DownNoteColor = val;
-            }
-        }
-        public SKColor UpNoteColor { get; set; } = new SKColor (0x12, 0xFA, 0x05, 0xFF);
-        [DataModelIgnore]
-        public string UpNoteHex {
-            get => UpNoteColor.ToString ();
-            set {
-                SKColor val = UpNoteColor;
-                SKColor.TryParse (value, out val);
-                UpNoteColor = val;
-            }
-        }
-        public SKColor RightNoteColor { get; set; } = new SKColor (0xF9, 0x39, 0x3F, 0xFF);
-        [DataModelIgnore]
-        public string RightNoteHex {
-            get => RightNoteColor.ToString ();
-            set {
-                SKColor val = RightNoteColor;
-                SKColor.TryParse (value, out val);
-                RightNoteColor = val;
-            }
+        [DataModelProperty (Name = "Player health", Description = "How much health boyfriend has")]
+        public float BoyfriendHealth { get; set; }
+        [DataModelProperty (Name = "Current combo", Description = "How big your current combo is")]
+        public int CurrentCombo { get; set; }
+        [DataModelProperty (Name = "Rating", Description = "Your rating percentage")]
+        public float RatingPercentage { get; set; }
+        [DataModelProperty (Name = "Full combo", Description = "Whether you are currently in a full combo")]
+        public bool FullCombo { get; set; }
+
+
+        [DataModelProperty (Name = "On beat")]
+        public DataModelEvent OnBeat { get; } = new DataModelEvent ();
+        [DataModelProperty (Name = "On measure")]
+        public DataModelEvent OnMeasure { get; } = new DataModelEvent ();
+        [DataModelProperty (Name = "On combo broken")]
+        public DataModelEvent<ComboBreakEventArgs> OnComboBroken { get; } = new DataModelEvent<ComboBreakEventArgs> ();
+    }
+
+    public class ComboBreakEventArgs : DataModelEventArgs {
+        public int BrokenComboValue { get; set; }
+        public bool WasFullCombo { get; set; }
+
+        public ComboBreakEventArgs (int brokenComboValue, bool wasFullCombo) {
+            BrokenComboValue = brokenComboValue;
+            WasFullCombo = wasFullCombo;
         }
     }
 }
