@@ -103,18 +103,8 @@ namespace Artemis.Plugins.Module.FNF {
                 SKColor.TryParse (h, out val);
                 DataModel.Colors.AccentColor4 = val;
             });
-            webServerService.AddStringEndPoint (this, "SetBlammedHex", h => {
-                SKColor val = DataModel.Colors.BlammedLights;
-                SKColor.TryParse (h, out val);
-                DataModel.Colors.BlammedLights = val;
-                DataModel.Colors.OnBlammedLights.Trigger ();
-            });
-            webServerService.AddStringEndPoint (this, "FlashColorHex", h => {
-                SKColor val = DataModel.Colors.FlashColor;
-                SKColor.TryParse (h, out val);
-                DataModel.Colors.FlashColor = val;
-                DataModel.Colors.OnFlash.Trigger ();
-            });
+            webServerService.AddJsonEndPoint<FlashEventArgs> (this, "SetBlammedHex", h => DataModel.Colors.OnBlammedLights.Trigger (h));
+            webServerService.AddJsonEndPoint<FlashEventArgs> (this, "TriggerFlash", h => DataModel.Colors.OnFlash.Trigger (h));
             webServerService.AddStringEndPoint (this, "SetFadeHex", h => {
                 SKColor val = DataModel.Colors.FadeColor;
                 SKColor.TryParse (h, out val);
@@ -125,6 +115,15 @@ namespace Artemis.Plugins.Module.FNF {
                 bool.TryParse (h, out val);
                 DataModel.Colors.Fade = val;
             });
+            webServerService.AddJsonEndPoint<CustomEventArgs> (this, "TriggerCustomEvent", h => DataModel.CustomEvent.Trigger (h));
+
+            /* webServerService.AddStringEndPoint (this, "FlashColorHex", h => {
+             *    SKColor val = DataModel.Colors.FlashColor;
+             *    SKColor.TryParse (h, out val);
+             *    DataModel.Colors.FlashColor = val;
+             *    DataModel.Colors.OnFlash.Trigger ();
+             *}); // keeping this just in case but using events for flashes is a better idea
+             */
         }
 
         public override void Disable () {
