@@ -12,8 +12,12 @@ namespace Artemis.Plugins.Module.FNF {
 
         public override List<IModuleActivationRequirement> ActivationRequirements => null; // might add this, probably won't just to be on the safe side when it comes to mods
 
-        public FnfModule (IWebServerService webServerService) {
+        public FnfModule (IWebServerService webServerService, PluginSettings settings) {
             this.webServerService = webServerService;
+
+            if (settings.GetSetting ("AutoDefaultProfilesCreation", true).Value) {
+                AddDefaultProfile (DefaultCategoryName.General, "Profiles/FNF.json");
+            }
         }
 
         public override void Enable () {
