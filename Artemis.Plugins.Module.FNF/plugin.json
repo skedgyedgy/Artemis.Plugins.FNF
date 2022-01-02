@@ -5,6 +5,6 @@
   "Author": "skedgyedgy",
   "Website": null,
   "Repository": "https://github.com/skedgyedgy/Artemis.Plugins",
-  "Version": "1.0.0.0",
+  "Version": "1.0.1",
   "Main": "Artemis.Plugins.Module.FNF.dll"
 }
