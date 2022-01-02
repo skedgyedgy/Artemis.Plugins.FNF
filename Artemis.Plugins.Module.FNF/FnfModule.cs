@@ -4,19 +4,29 @@ using Artemis.Core.Services;
 using Artemis.Plugins.Module.FNF.DataModels;
 using SkiaSharp;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Newtonsoft.Json;
 
 namespace Artemis.Plugins.Module.FNF {
-    [PluginFeature (Name = "Friday Night Funkin' Module", Icon = "Music")]
+    [PluginFeature (Name = "FNF Module", Icon = "Music")]
     public class FnfModule : Module<FnfDataModel> {
         private readonly IWebServerService webServerService;
+        private readonly IProfileService profileService;
+
+        private ProfileCategory fnfCategory;
 
         public override List<IModuleActivationRequirement> ActivationRequirements => null; // might add this, probably won't just to be on the safe side when it comes to mods
 
-        public FnfModule (IWebServerService webServerService, PluginSettings settings) {
+        public FnfModule (IWebServerService webServerService, IProfileService profileService, PluginSettings settings) {
             this.webServerService = webServerService;
+            this.profileService = profileService;
 
-            if (settings.GetSetting ("AutoDefaultProfilesCreation", true).Value) {
-                AddDefaultProfile (DefaultCategoryName.General, "Profiles/FNF.json");
+            if (profileService.ProfileCategories.Any (cat => cat.Name == "Friday Night Funkin'")) {
+                fnfCategory = profileService.ProfileCategories.First (cat => cat.Name == "Friday Night Funkin'");
+            // } else if (settings.GetSetting ("AllowAutomaticProfiles", true).Value) { TODO: add this eventually
+            } else {
+                fnfCategory = profileService.CreateProfileCategory ("Friday Night Funkin'");
             }
         }
 
@@ -120,6 +130,24 @@ namespace Artemis.Plugins.Module.FNF {
                 DataModel.Colors.Fade = val;
             });
             webServerService.AddJsonEndPoint<CustomEventArgs> (this, "TriggerCustomEvent", h => DataModel.CustomEvent.Trigger (h));
+            webServerService.AddStringEndPoint (this, "SetProfile", h => {
+                // if (File.Exists (h)) AddDefaultProfile (DefaultCategoryName.Games, h);
+                if (fnfCategory != null) {
+                    if (File.Exists (h)) {
+                        ProfileConfigurationExportModel exportModel = JsonConvert.DeserializeObject<ProfileConfigurationExportModel> (File.ReadAllText (h), IProfileService.ExportSettings);
+                        if (exportModel != null) {
+                            if (profileService.ProfileConfigurations.Any (p => p.Entity.ProfileId == exportModel.ProfileEntity.Id))
+                                profileService.RemoveProfileConfiguration (fnfCategory.ProfileConfigurations.First (p => p.Entity.ProfileId == exportModel.ProfileEntity.Id));
+                            profileService.ImportProfile (fnfCategory, exportModel, false, true, "auto-added");
+                        } else {
+                            throw new System.Exception ();
+                        }
+                    } else {
+                        throw new FileNotFoundException ();
+                    }
+                }
+                AddDefaultProfile (DefaultCategoryName.Games, h);
+            });
 
             /* webServerService.AddStringEndPoint (this, "FlashColorHex", h => {
              *    SKColor val = DataModel.Colors.FlashColor;
