@@ -2,7 +2,9 @@
 using Artemis.Core.Modules;
 using Artemis.Core.Services;
 using Artemis.Plugins.Module.FNF.DataModels;
+using Artemis.UI.Events;
 using SkiaSharp;
+using Stylet;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,24 +15,28 @@ namespace Artemis.Plugins.Module.FNF {
     public class FnfModule : Module<FnfDataModel> {
         private readonly IWebServerService webServerService;
         private readonly IProfileService profileService;
+        private readonly IEventAggregator eventAggregator;
 
         private ProfileCategory fnfCategory;
 
         public override List<IModuleActivationRequirement> ActivationRequirements => null; // might add this, probably won't just to be on the safe side when it comes to mods
 
-        public FnfModule (IWebServerService webServerService, IProfileService profileService, PluginSettings settings) {
+        public FnfModule (IWebServerService webServerService, IProfileService profileService, IEventAggregator eventAggregator, PluginSettings settings) {
             this.webServerService = webServerService;
             this.profileService = profileService;
-
-            if (profileService.ProfileCategories.Any (cat => cat.Name == "Friday Night Funkin'")) {
-                fnfCategory = profileService.ProfileCategories.First (cat => cat.Name == "Friday Night Funkin'");
-            // } else if (settings.GetSetting ("AllowAutomaticProfiles", true).Value) { TODO: add this eventually
-            } else {
-                fnfCategory = profileService.CreateProfileCategory ("Friday Night Funkin'");
-            }
+            this.eventAggregator = eventAggregator;
         }
 
         public override void Enable () {
+            if (profileService.ProfileCategories.Any (cat => cat.Name == "Friday Night Funkin'")) {
+                fnfCategory = profileService.ProfileCategories.First (cat => cat.Name == "Friday Night Funkin'");
+                // } else if (settings.GetSetting ("AllowAutomaticProfiles", true).Value) { TODO: add this eventually
+            } else {
+                fnfCategory = profileService.CreateProfileCategory ("Friday Night Funkin'");
+                fnfCategory.Load ();
+                fnfCategory.Order = -10;
+            }
+
             webServerService.AddStringEndPoint (this, "SetGameState", h => {
                 DataModel.GameState.GameState = h;
                 if (h == "dead") DataModel.GameState.OnBlueBalled.Trigger ();
@@ -136,8 +142,12 @@ namespace Artemis.Plugins.Module.FNF {
                     if (File.Exists (h)) {
                         ProfileConfigurationExportModel exportModel = JsonConvert.DeserializeObject<ProfileConfigurationExportModel> (File.ReadAllText (h), IProfileService.ExportSettings);
                         if (exportModel != null) {
-                            if (profileService.ProfileConfigurations.Any (p => p.Entity.ProfileId == exportModel.ProfileEntity.Id))
-                                profileService.RemoveProfileConfiguration (fnfCategory.ProfileConfigurations.First (p => p.Entity.ProfileId == exportModel.ProfileEntity.Id));
+                            if (profileService.ProfileConfigurations.Any (p => p.Entity.ProfileId == exportModel.ProfileEntity.Id)) {
+                                ProfileConfiguration oldConfig = fnfCategory.ProfileConfigurations.First (p => p.Entity.ProfileId == exportModel.ProfileEntity.Id);
+                                if (oldConfig.IsBeingEdited) eventAggregator.Publish (new RequestSelectSidebarItemEvent ("Home"));
+
+                                profileService.RemoveProfileConfiguration (oldConfig);
+                            }
                             profileService.ImportProfile (fnfCategory, exportModel, false, true, "auto-added");
                         } else {
                             throw new System.Exception ();

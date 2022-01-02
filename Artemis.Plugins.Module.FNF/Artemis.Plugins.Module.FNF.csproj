@@ -40,6 +40,9 @@
     <Reference Include="Artemis.Storage">
       <HintPath>..\..\Artemis\src\Artemis.Storage\bin\x64\Debug\net5.0\Artemis.Storage.dll</HintPath>
     </Reference>
+    <Reference Include="Artemis.UI">
+      <HintPath>..\..\Artemis\src\Artemis.UI\bin\net5.0-windows\Artemis.UI.dll</HintPath>
+    </Reference>
     <Reference Include="Artemis.UI.Shared">
       <HintPath>..\..\..\..\..\..\Program%20Files\Artemis\Artemis.UI.Shared.dll</HintPath>
       <Private>false</Private>
