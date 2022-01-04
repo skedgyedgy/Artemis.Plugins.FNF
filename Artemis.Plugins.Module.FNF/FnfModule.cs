@@ -14,29 +14,14 @@ namespace Artemis.Plugins.Module.FNF {
     [PluginFeature (Name = "FNF Module", Icon = "Music")]
     public class FnfModule : Module<FnfDataModel> {
         private readonly IWebServerService webServerService;
-        private readonly IProfileService profileService;
-        private readonly IEventAggregator eventAggregator;
-
-        private ProfileCategory fnfCategory;
 
         public override List<IModuleActivationRequirement> ActivationRequirements => null; // might add this, probably won't just to be on the safe side when it comes to mods
 
-        public FnfModule (IWebServerService webServerService, IProfileService profileService, IEventAggregator eventAggregator, PluginSettings settings) {
+        public FnfModule (IWebServerService webServerService) {
             this.webServerService = webServerService;
-            this.profileService = profileService;
-            this.eventAggregator = eventAggregator;
         }
 
         public override void Enable () {
-            if (profileService.ProfileCategories.Any (cat => cat.Name == "Friday Night Funkin'")) {
-                fnfCategory = profileService.ProfileCategories.First (cat => cat.Name == "Friday Night Funkin'");
-                // } else if (settings.GetSetting ("AllowAutomaticProfiles", true).Value) { TODO: add this eventually
-            } else {
-                fnfCategory = profileService.CreateProfileCategory ("Friday Night Funkin'");
-                fnfCategory.Load ();
-                fnfCategory.Order = -10;
-            }
-
             webServerService.AddStringEndPoint (this, "SetGameState", h => {
                 DataModel.GameState.GameState = h;
                 if (h == "dead") DataModel.GameState.OnBlueBalled.Trigger ();
@@ -136,7 +121,6 @@ namespace Artemis.Plugins.Module.FNF {
                 DataModel.Colors.Fade = val;
             });
             webServerService.AddJsonEndPoint<CustomEventArgs> (this, "TriggerCustomEvent", h => DataModel.CustomEvent.Trigger (h));
-            webServerService.AddStringEndPoint (this, "SetProfile", h => {
             webServerService.AddStringEndPoint (this, "ResetAllFlags", h => {
                 DataModel.CustomFlags.CustomFlag1 = false;
                 DataModel.CustomFlags.CustomFlag2 = false;
@@ -203,6 +187,7 @@ namespace Artemis.Plugins.Module.FNF {
                         break;
                 }
             });
+            /* webServerService.AddStringEndPoint (this, "SetProfile", h => {
                 // if (File.Exists (h)) AddDefaultProfile (DefaultCategoryName.Games, h);
                 if (fnfCategory != null) {
                     if (File.Exists (h)) {
@@ -222,8 +207,7 @@ namespace Artemis.Plugins.Module.FNF {
                         throw new FileNotFoundException ();
                     }
                 }
-                AddDefaultProfile (DefaultCategoryName.Games, h);
-            });
+            });*/ // this was moved to its own feature
 
             /* webServerService.AddStringEndPoint (this, "FlashColorHex", h => {
              *    SKColor val = DataModel.Colors.FlashColor;
