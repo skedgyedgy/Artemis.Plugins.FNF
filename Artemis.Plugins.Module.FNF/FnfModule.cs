@@ -137,6 +137,72 @@ namespace Artemis.Plugins.Module.FNF {
             });
             webServerService.AddJsonEndPoint<CustomEventArgs> (this, "TriggerCustomEvent", h => DataModel.CustomEvent.Trigger (h));
             webServerService.AddStringEndPoint (this, "SetProfile", h => {
+            webServerService.AddStringEndPoint (this, "ResetAllFlags", h => {
+                DataModel.CustomFlags.CustomFlag1 = false;
+                DataModel.CustomFlags.CustomFlag2 = false;
+                DataModel.CustomFlags.CustomFlag3 = false;
+                DataModel.CustomFlags.CustomFlag4 = false;
+                DataModel.CustomFlags.CustomFlag5 = false;
+                DataModel.CustomFlags.CustomFlag6 = false;
+                DataModel.CustomFlags.CustomFlag7 = false;
+                DataModel.CustomFlags.CustomFlag8 = false;
+            });
+            webServerService.AddStringEndPoint (this, "EnableFlag", h => {
+                switch (h) {
+                    case "1":
+                        DataModel.CustomFlags.CustomFlag1 = true;
+                        break;
+                    case "2":
+                        DataModel.CustomFlags.CustomFlag2 = true;
+                        break;
+                    case "3":
+                        DataModel.CustomFlags.CustomFlag3 = true;
+                        break;
+                    case "4":
+                        DataModel.CustomFlags.CustomFlag4 = true;
+                        break;
+                    case "5":
+                        DataModel.CustomFlags.CustomFlag5 = true;
+                        break;
+                    case "6":
+                        DataModel.CustomFlags.CustomFlag6 = true;
+                        break;
+                    case "7":
+                        DataModel.CustomFlags.CustomFlag7 = true;
+                        break;
+                    case "8":
+                        DataModel.CustomFlags.CustomFlag8 = true;
+                        break;
+                }
+            });
+            webServerService.AddStringEndPoint (this, "DisableFlag", h => {
+                switch (h) {
+                    case "1":
+                        DataModel.CustomFlags.CustomFlag1 = false;
+                        break;
+                    case "2":
+                        DataModel.CustomFlags.CustomFlag2 = false;
+                        break;
+                    case "3":
+                        DataModel.CustomFlags.CustomFlag3 = false;
+                        break;
+                    case "4":
+                        DataModel.CustomFlags.CustomFlag4 = false;
+                        break;
+                    case "5":
+                        DataModel.CustomFlags.CustomFlag5 = false;
+                        break;
+                    case "6":
+                        DataModel.CustomFlags.CustomFlag6 = false;
+                        break;
+                    case "7":
+                        DataModel.CustomFlags.CustomFlag7 = false;
+                        break;
+                    case "8":
+                        DataModel.CustomFlags.CustomFlag8 = false;
+                        break;
+                }
+            });
                 // if (File.Exists (h)) AddDefaultProfile (DefaultCategoryName.Games, h);
                 if (fnfCategory != null) {
                     if (File.Exists (h)) {

@@ -10,6 +10,7 @@ namespace Artemis.Plugins.Module.FNF.DataModels {
         public FNFGameState GameState { get; set; } = new FNFGameState ();
         public FNFSongData SongData { get; set; } = new FNFSongData ();
         public FNFColors Colors { get; set; } = new FNFColors ();
+        public FNFCustomFlags CustomFlags { get; set; } = new FNFCustomFlags ();
         public DataModelEvent<CustomEventArgs> CustomEvent { get; } = new DataModelEvent<CustomEventArgs> ();
     }
 
