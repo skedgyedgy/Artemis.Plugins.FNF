@@ -1,6 +1,5 @@
 ﻿using Artemis.Core;
 using Artemis.Core.Modules;
-using SkiaSharp;
 
 namespace Artemis.Plugins.Module.FNF.DataModels {
     public class FNFGameState {

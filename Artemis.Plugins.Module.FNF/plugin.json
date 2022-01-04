@@ -4,7 +4,7 @@
   "Description": "pretty lights for beep boop game",
   "Author": "skedgyedgy",
   "Website": null,
-  "Repository": "https://github.com/skedgyedgy/Artemis.Plugins",
-  "Version": "1.1.1",
+  "Repository": "https://github.com/skedgyedgy/Artemis.Plugins.FNF",
+  "Version": "1.2",
   "Main": "Artemis.Plugins.Module.FNF.dll"
 }
