@@ -1,7 +1,6 @@
 ﻿using Artemis.Core;
 using Artemis.Core.Modules;
 using SkiaSharp;
-using System.Diagnostics;
 
 namespace Artemis.Plugins.Module.FNF.DataModels {
     public class FNFColors {
@@ -30,8 +29,7 @@ namespace Artemis.Plugins.Module.FNF.DataModels {
         public string FlashHex {
             get => FlashColor.ToString ();
             set {
-                SKColor val = FlashColor;
-                SKColor.TryParse (value, out val);
+                _ = SKColor.TryParse (value, out SKColor val);
                 FlashColor = val;
             }
         }

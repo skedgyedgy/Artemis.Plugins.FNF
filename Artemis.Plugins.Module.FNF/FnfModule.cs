@@ -2,13 +2,8 @@
 using Artemis.Core.Modules;
 using Artemis.Core.Services;
 using Artemis.Plugins.Module.FNF.DataModels;
-using Artemis.UI.Events;
 using SkiaSharp;
-using Stylet;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Newtonsoft.Json;
 
 namespace Artemis.Plugins.Module.FNF {
     [PluginFeature (Name = "FNF Module", Icon = "Music")]
@@ -29,15 +24,10 @@ namespace Artemis.Plugins.Module.FNF {
             webServerService.AddStringEndPoint (this, "SetModName", h => DataModel.GameState.ModName = h);
 
             webServerService.AddStringEndPoint (this, "SetStageName", h => DataModel.SongData.StageName = h);
-            webServerService.AddStringEndPoint (this, "SetIsPixelStage", h => {
-                bool val = DataModel.SongData.IsPixelStage;
-                bool.TryParse (h, out val);
-                DataModel.SongData.IsPixelStage = val;
-            });
+            webServerService.AddStringEndPoint (this, "SetIsPixelStage", h => DataModel.SongData.IsPixelStage = bool.Parse (h));
 
             webServerService.AddStringEndPoint (this, "SetBeat", h => {
-                int val = DataModel.SongData.BeatNumber;
-                int.TryParse (h, out val);
+                int val = int.Parse (h);
 
                 if (val > DataModel.SongData.BeatNumber) {
                     DataModel.SongData.OnBeat.Trigger ();
@@ -46,21 +36,9 @@ namespace Artemis.Plugins.Module.FNF {
 
                 DataModel.SongData.BeatNumber = val;
             });
-            webServerService.AddStringEndPoint (this, "SetHealth", h => {
-                float val = DataModel.SongData.BoyfriendHealth;
-                float.TryParse (h, out val);
-                DataModel.SongData.BoyfriendHealth = val;
-            });
-            webServerService.AddStringEndPoint (this, "SetRating", h => {
-                float val = DataModel.SongData.RatingPercentage;
-                float.TryParse (h, out val);
-                DataModel.SongData.RatingPercentage = val;
-            });
-            webServerService.AddStringEndPoint (this, "SetCombo", h => {
-                int val = DataModel.SongData.CurrentCombo;
-                int.TryParse (h, out val);
-                DataModel.SongData.CurrentCombo = val;
-            });
+            webServerService.AddStringEndPoint (this, "SetHealth", h => DataModel.SongData.BoyfriendHealth = float.Parse (h));
+            webServerService.AddStringEndPoint (this, "SetRating", h => DataModel.SongData.RatingPercentage = float.Parse (h));
+            webServerService.AddStringEndPoint (this, "SetCombo", h => DataModel.SongData.CurrentCombo = int.Parse (h));
             webServerService.AddStringEndPoint (this, "StartSong", h => {
                 DataModel.SongData.FullCombo = true;
                 DataModel.SongData.CurrentCombo = 0;
@@ -73,53 +51,17 @@ namespace Artemis.Plugins.Module.FNF {
                 DataModel.SongData.CurrentCombo = 0;
             });
 
-            webServerService.AddStringEndPoint (this, "SetDadHex", h => {
-                SKColor val = DataModel.Colors.DadHealthColor;
-                SKColor.TryParse (h, out val);
-                DataModel.Colors.DadHealthColor = val;
-            });
-            webServerService.AddStringEndPoint (this, "SetBFHex", h => {
-                SKColor val = DataModel.Colors.BfHealthColor;
-                SKColor.TryParse (h, out val);
-                DataModel.Colors.BfHealthColor = val;
-            });
-            webServerService.AddStringEndPoint (this, "SetBackgroundHex", h => {
-                SKColor val = DataModel.Colors.BackgroundColor;
-                SKColor.TryParse (h, out val);
-                DataModel.Colors.BackgroundColor = val;
-            });
-            webServerService.AddStringEndPoint (this, "SetAccent1Hex", h => {
-                SKColor val = DataModel.Colors.AccentColor1;
-                SKColor.TryParse (h, out val);
-                DataModel.Colors.AccentColor1 = val;
-            });
-            webServerService.AddStringEndPoint (this, "SetAccent2Hex", h => {
-                SKColor val = DataModel.Colors.AccentColor2;
-                SKColor.TryParse (h, out val);
-                DataModel.Colors.AccentColor2 = val;
-            });
-            webServerService.AddStringEndPoint (this, "SetAccent3Hex", h => {
-                SKColor val = DataModel.Colors.AccentColor3;
-                SKColor.TryParse (h, out val);
-                DataModel.Colors.AccentColor3 = val;
-            });
-            webServerService.AddStringEndPoint (this, "SetAccent4Hex", h => {
-                SKColor val = DataModel.Colors.AccentColor4;
-                SKColor.TryParse (h, out val);
-                DataModel.Colors.AccentColor4 = val;
-            });
+            webServerService.AddStringEndPoint (this, "SetDadHex", h => DataModel.Colors.DadHealthColor = SKColor.Parse (h));
+            webServerService.AddStringEndPoint (this, "SetBFHex", h => DataModel.Colors.BfHealthColor = SKColor.Parse (h));
+            webServerService.AddStringEndPoint (this, "SetBackgroundHex", h => DataModel.Colors.BackgroundColor = SKColor.Parse (h));
+            webServerService.AddStringEndPoint (this, "SetAccent1Hex", h => DataModel.Colors.AccentColor1 = SKColor.Parse (h));
+            webServerService.AddStringEndPoint (this, "SetAccent2Hex", h => DataModel.Colors.AccentColor2 = SKColor.Parse (h));
+            webServerService.AddStringEndPoint (this, "SetAccent3Hex", h => DataModel.Colors.AccentColor3 = SKColor.Parse (h));
+            webServerService.AddStringEndPoint (this, "SetAccent4Hex", h => DataModel.Colors.AccentColor4 = SKColor.Parse (h));
             webServerService.AddJsonEndPoint<FlashEventArgs> (this, "SetBlammedHex", h => DataModel.Colors.OnBlammedLights.Trigger (h));
             webServerService.AddJsonEndPoint<FlashEventArgs> (this, "TriggerFlash", h => DataModel.Colors.OnFlash.Trigger (h));
-            webServerService.AddStringEndPoint (this, "SetFadeHex", h => {
-                SKColor val = DataModel.Colors.FadeColor;
-                SKColor.TryParse (h, out val);
-                DataModel.Colors.FadeColor = val;
-            });
-            webServerService.AddStringEndPoint (this, "ToggleFade", h => {
-                bool val = DataModel.Colors.Fade;
-                bool.TryParse (h, out val);
-                DataModel.Colors.Fade = val;
-            });
+            webServerService.AddStringEndPoint (this, "SetFadeHex", h => DataModel.Colors.FadeColor = SKColor.Parse (h));
+            webServerService.AddStringEndPoint (this, "ToggleFade", h => DataModel.Colors.Fade = bool.Parse (h));
             webServerService.AddJsonEndPoint<CustomEventArgs> (this, "TriggerCustomEvent", h => DataModel.CustomEvent.Trigger (h));
             webServerService.AddStringEndPoint (this, "ResetAllFlags", h => {
                 DataModel.CustomFlags.CustomFlag1 = false;
@@ -130,6 +72,18 @@ namespace Artemis.Plugins.Module.FNF {
                 DataModel.CustomFlags.CustomFlag6 = false;
                 DataModel.CustomFlags.CustomFlag7 = false;
                 DataModel.CustomFlags.CustomFlag8 = false;
+
+                DataModel.CustomFlags.CustomString1 = null;
+                DataModel.CustomFlags.CustomString2 = null;
+                DataModel.CustomFlags.CustomString3 = null;
+                DataModel.CustomFlags.CustomString4 = null;
+                DataModel.CustomFlags.CustomString5 = null;
+
+                DataModel.CustomFlags.CustomNumber1 = 0;
+                DataModel.CustomFlags.CustomNumber2 = 0;
+                DataModel.CustomFlags.CustomNumber3 = 0;
+                DataModel.CustomFlags.CustomNumber4 = 0;
+                DataModel.CustomFlags.CustomNumber5 = 0;
             });
             webServerService.AddStringEndPoint (this, "EnableFlag", h => {
                 switch (h) {
@@ -157,6 +111,8 @@ namespace Artemis.Plugins.Module.FNF {
                     case "8":
                         DataModel.CustomFlags.CustomFlag8 = true;
                         break;
+                    default:
+                        throw new System.IndexOutOfRangeException ();
                 }
             });
             webServerService.AddStringEndPoint (this, "DisableFlag", h => {
@@ -185,8 +141,53 @@ namespace Artemis.Plugins.Module.FNF {
                     case "8":
                         DataModel.CustomFlags.CustomFlag8 = false;
                         break;
+                    default:
+                        throw new System.IndexOutOfRangeException ();
                 }
             });
+            webServerService.AddJsonEndPoint<CustomStringSetArgs> (this, "SetCustomString", h => {
+                switch (h.Id) {
+                    case 1:
+                        DataModel.CustomFlags.CustomString1 = h.Value;
+                        break;
+                    case 2:
+                        DataModel.CustomFlags.CustomString2 = h.Value;
+                        break;
+                    case 3:
+                        DataModel.CustomFlags.CustomString3 = h.Value;
+                        break;
+                    case 4:
+                        DataModel.CustomFlags.CustomString4 = h.Value;
+                        break;
+                    case 5:
+                        DataModel.CustomFlags.CustomString5 = h.Value;
+                        break;
+                    default:
+                        throw new System.IndexOutOfRangeException ();
+                }
+            });
+            webServerService.AddJsonEndPoint<CustomNumberSetArgs> (this, "SetCustomNumber", h => {
+                switch (h.Id) {
+                    case 1:
+                        DataModel.CustomFlags.CustomNumber1 = h.Value;
+                        break;
+                    case 2:
+                        DataModel.CustomFlags.CustomNumber2 = h.Value;
+                        break;
+                    case 3:
+                        DataModel.CustomFlags.CustomNumber3 = h.Value;
+                        break;
+                    case 4:
+                        DataModel.CustomFlags.CustomNumber4 = h.Value;
+                        break;
+                    case 5:
+                        DataModel.CustomFlags.CustomNumber5 = h.Value;
+                        break;
+                    default:
+                        throw new System.IndexOutOfRangeException ();
+                }
+            });
+
             /* webServerService.AddStringEndPoint (this, "SetProfile", h => {
                 // if (File.Exists (h)) AddDefaultProfile (DefaultCategoryName.Games, h);
                 if (fnfCategory != null) {
@@ -232,6 +233,16 @@ namespace Artemis.Plugins.Module.FNF {
 
         private void JsonPluginEndPointOnRequestException (object sender, EndpointExceptionEventArgs e) {
             throw e.Exception;
+        }
+
+        private class CustomStringSetArgs {
+            public int Id { get; set; }
+            public string Value { get; set; }
+        }
+
+        private class CustomNumberSetArgs {
+            public int Id { get; set; }
+            public int Value { get; set; }
         }
     }
 }
