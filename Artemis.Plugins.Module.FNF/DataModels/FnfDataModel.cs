@@ -20,8 +20,7 @@ namespace Artemis.Plugins.Module.FNF.DataModels {
         public string Hex {
             get => Color.ToString ();
             set {
-                SKColor val = Color;
-                SKColor.TryParse (value, out val);
+                _ = SKColor.TryParse (value, out SKColor val);
                 Color = val;
             }
         }

@@ -5,8 +5,6 @@ using SkiaSharp;
 using System.Linq;
 
 namespace Artemis.Plugins.Module.FNF {
-    using PropertyGroups;
-
     public class FnfControlsBrush : PerLedLayerBrush<FnfControlsPropertyGroup> {
         public override void EnableLayerBrush () {
         }
@@ -20,25 +18,13 @@ namespace Artemis.Plugins.Module.FNF {
         public override SKColor GetColor (ArtemisLed led, SKPoint renderPoint) {
             if (led.Device.DeviceType != RGBDeviceType.Keyboard) return SKColor.Empty;
 
-            string controlName;
-
-            switch (led.RgbLed.Id) {
-                case LedId.Keyboard_ArrowLeft:
-                    controlName = "Left";
-                    break;
-                case LedId.Keyboard_ArrowDown:
-                    controlName = "Down";
-                    break;
-                case LedId.Keyboard_ArrowUp:
-                    controlName = "Up";
-                    break;
-                case LedId.Keyboard_ArrowRight:
-                    controlName = "Right";
-                    break;
-                default:
-                    controlName = led.RgbLed.Id.ToString ().Replace ("Keyboard_", "");
-                    break;
-            }
+            string controlName = led.RgbLed.Id switch {
+                LedId.Keyboard_ArrowLeft => "Left",
+                LedId.Keyboard_ArrowDown => "Down",
+                LedId.Keyboard_ArrowUp => "Up",
+                LedId.Keyboard_ArrowRight => "Right",
+                _ => led.RgbLed.Id.ToString ().Replace ("Keyboard_", ""),
+            };
 
             if (FnfControlsBrushProvider.Controls.Any (p => p.Value.Contains (controlName))) {
                 string controlType = FnfControlsBrushProvider.Controls.First (p => p.Value.Contains (controlName)).Key;
@@ -46,6 +32,17 @@ namespace Artemis.Plugins.Module.FNF {
             }
 
             return SKColor.Empty;
+        }
+    }
+
+    public class FnfControlsPropertyGroup : LayerPropertyGroup {
+        protected override void PopulateDefaults () {
+        }
+
+        protected override void EnableProperties () {
+        }
+
+        protected override void DisableProperties () {
         }
     }
 }

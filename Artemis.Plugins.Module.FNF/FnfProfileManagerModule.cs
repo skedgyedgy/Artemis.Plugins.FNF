@@ -21,6 +21,7 @@ namespace Artemis.Plugins.Module.FNF {
             this.eventAggregator = eventAggregator;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage ("Interoperability", "CA1416:Validate platform compatibility", Justification = "SHUT!!! UP!!!!!!!!!")]
         public override void Enable () {
             if (profileService.ProfileCategories.Any (cat => cat.Name == "Friday Night Funkin'")) {
                 fnfCategory = profileService.ProfileCategories.First (cat => cat.Name == "Friday Night Funkin'");
