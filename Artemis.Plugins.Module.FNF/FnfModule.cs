@@ -2,13 +2,8 @@
 using Artemis.Core.Modules;
 using Artemis.Core.Services;
 using Artemis.Plugins.Module.FNF.DataModels;
-using Artemis.UI.Events;
 using SkiaSharp;
-using Stylet;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Newtonsoft.Json;
 
 namespace Artemis.Plugins.Module.FNF {
     [PluginFeature (Name = "FNF Module", Icon = "Music")]
