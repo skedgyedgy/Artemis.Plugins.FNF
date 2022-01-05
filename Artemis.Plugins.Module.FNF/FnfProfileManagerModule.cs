@@ -25,7 +25,6 @@ namespace Artemis.Plugins.Module.FNF {
         public override void Enable () {
             if (profileService.ProfileCategories.Any (cat => cat.Name == "Friday Night Funkin'")) {
                 fnfCategory = profileService.ProfileCategories.First (cat => cat.Name == "Friday Night Funkin'");
-                // } else if (settings.GetSetting ("AllowAutomaticProfiles", true).Value) { TODO: add this eventually
             } else {
                 fnfCategory = profileService.CreateProfileCategory ("Friday Night Funkin'");
                 fnfCategory.Load ();
