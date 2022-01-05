@@ -130,6 +130,18 @@ namespace Artemis.Plugins.Module.FNF {
                 DataModel.CustomFlags.CustomFlag6 = false;
                 DataModel.CustomFlags.CustomFlag7 = false;
                 DataModel.CustomFlags.CustomFlag8 = false;
+
+                DataModel.CustomFlags.CustomString1 = null;
+                DataModel.CustomFlags.CustomString2 = null;
+                DataModel.CustomFlags.CustomString3 = null;
+                DataModel.CustomFlags.CustomString4 = null;
+                DataModel.CustomFlags.CustomString5 = null;
+
+                DataModel.CustomFlags.CustomNumber1 = 0;
+                DataModel.CustomFlags.CustomNumber2 = 0;
+                DataModel.CustomFlags.CustomNumber3 = 0;
+                DataModel.CustomFlags.CustomNumber4 = 0;
+                DataModel.CustomFlags.CustomNumber5 = 0;
             });
             webServerService.AddStringEndPoint (this, "EnableFlag", h => {
                 switch (h) {
@@ -187,6 +199,45 @@ namespace Artemis.Plugins.Module.FNF {
                         break;
                 }
             });
+            webServerService.AddJsonEndPoint<CustomStringSetArgs> (this, "SetCustomString", h => {
+                switch (h.Id) {
+                    case 1:
+                        DataModel.CustomFlags.CustomString1 = h.Value;
+                        break;
+                    case 2:
+                        DataModel.CustomFlags.CustomString2 = h.Value;
+                        break;
+                    case 3:
+                        DataModel.CustomFlags.CustomString3 = h.Value;
+                        break;
+                    case 4:
+                        DataModel.CustomFlags.CustomString4 = h.Value;
+                        break;
+                    case 5:
+                        DataModel.CustomFlags.CustomString5 = h.Value;
+                        break;
+                }
+            });
+            webServerService.AddJsonEndPoint<CustomNumberSetArgs> (this, "SetCustomNumber", h => {
+                switch (h.Id) {
+                    case 1:
+                        DataModel.CustomFlags.CustomNumber1 = h.Value;
+                        break;
+                    case 2:
+                        DataModel.CustomFlags.CustomNumber2 = h.Value;
+                        break;
+                    case 3:
+                        DataModel.CustomFlags.CustomNumber3 = h.Value;
+                        break;
+                    case 4:
+                        DataModel.CustomFlags.CustomNumber4 = h.Value;
+                        break;
+                    case 5:
+                        DataModel.CustomFlags.CustomNumber5 = h.Value;
+                        break;
+                }
+            });
+
             /* webServerService.AddStringEndPoint (this, "SetProfile", h => {
                 // if (File.Exists (h)) AddDefaultProfile (DefaultCategoryName.Games, h);
                 if (fnfCategory != null) {
@@ -232,6 +283,16 @@ namespace Artemis.Plugins.Module.FNF {
 
         private void JsonPluginEndPointOnRequestException (object sender, EndpointExceptionEventArgs e) {
             throw e.Exception;
+        }
+
+        private class CustomStringSetArgs {
+            public int Id { get; set; }
+            public string Value { get; set; }
+        }
+
+        private class CustomNumberSetArgs {
+            public int Id { get; set; }
+            public int Value { get; set; }
         }
     }
 }
