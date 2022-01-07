@@ -3,7 +3,6 @@ using Artemis.Core.Modules;
 using Artemis.Core.Services;
 using Artemis.Plugins.Module.FNF.DataModels;
 using SkiaSharp;
-using System;
 using System.Collections.Generic;
 
 namespace Artemis.Plugins.Module.FNF {
