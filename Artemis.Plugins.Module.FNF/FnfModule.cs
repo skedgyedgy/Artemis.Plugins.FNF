@@ -3,6 +3,7 @@ using Artemis.Core.Modules;
 using Artemis.Core.Services;
 using Artemis.Plugins.Module.FNF.DataModels;
 using SkiaSharp;
+using System;
 using System.Collections.Generic;
 
 namespace Artemis.Plugins.Module.FNF {
@@ -23,6 +24,13 @@ namespace Artemis.Plugins.Module.FNF {
             });
             webServerService.AddStringEndPoint (this, "SetModName", h => DataModel.GameState.ModName = h);
 
+            webServerService.AddStringEndPoint (this, "SetSongName", h => DataModel.SongData.SongName = h);
+            webServerService.AddStringEndPoint (this, "SetDifficlutyName", h => DataModel.SongData.Difficulty = h);
+
+            webServerService.AddStringEndPoint (this, "SetDadName", h => DataModel.SongData.DadName = h);
+            webServerService.AddStringEndPoint (this, "SetBfName", h => DataModel.SongData.BfName = h);
+            webServerService.AddStringEndPoint (this, "SetGfName", h => DataModel.SongData.GfName = h);
+
             webServerService.AddStringEndPoint (this, "SetStageName", h => DataModel.SongData.StageName = h);
             webServerService.AddStringEndPoint (this, "SetIsPixelStage", h => DataModel.SongData.IsPixelStage = bool.Parse (h));
 
@@ -36,19 +44,28 @@ namespace Artemis.Plugins.Module.FNF {
 
                 DataModel.SongData.BeatNumber = val;
             });
+            webServerService.AddStringEndPoint (this, "SetSongProgress", h => DataModel.SongData.SongProgress = float.Parse (h));
             webServerService.AddStringEndPoint (this, "SetHealth", h => DataModel.SongData.BoyfriendHealth = float.Parse (h));
             webServerService.AddStringEndPoint (this, "SetRating", h => DataModel.SongData.RatingPercentage = float.Parse (h));
             webServerService.AddStringEndPoint (this, "SetCombo", h => DataModel.SongData.CurrentCombo = int.Parse (h));
             webServerService.AddStringEndPoint (this, "StartSong", h => {
+                DataModel.SongData.ComboType = "SFC";
                 DataModel.SongData.FullCombo = true;
                 DataModel.SongData.CurrentCombo = 0;
                 DataModel.GameState.OnSongStarted.Trigger ();
                 // DataModel.GameState.OnSongStarted.Trigger (new SongStartedEventArguments ());
             });
+            webServerService.AddJsonEndPoint<NoteHitEventArgs> (this, "NoteHit", h => DataModel.SongData.OnNoteHit.Trigger (h));
+            webServerService.AddJsonEndPoint<NoteMissEventArgs> (this, "NoteMiss", h => DataModel.SongData.OnNoteMiss.Trigger (h));
             webServerService.AddStringEndPoint (this, "BreakCombo", h => {
                 DataModel.SongData.OnComboBroken.Trigger (new ComboBreakEventArgs (DataModel.SongData.CurrentCombo, DataModel.SongData.FullCombo));
+                if (DataModel.SongData.FullCombo) DataModel.SongData.ComboType = "SDCB";
                 DataModel.SongData.FullCombo = false;
                 DataModel.SongData.CurrentCombo = 0;
+            });
+            webServerService.AddStringEndPoint (this, "SetComboType", h => {
+                DataModel.SongData.ComboType = h;
+                // DataModel.SongData.ComboType = Enum.Parse<ComboType> (h);
             });
 
             webServerService.AddStringEndPoint (this, "SetDadHex", h => DataModel.Colors.DadHealthColor = SKColor.Parse (h));
