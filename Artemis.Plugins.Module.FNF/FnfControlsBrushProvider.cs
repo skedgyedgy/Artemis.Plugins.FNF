@@ -5,7 +5,7 @@ using SkiaSharp;
 using System.Collections.Generic;
 
 namespace Artemis.Plugins.Module.FNF {
-    [PluginFeature (Name = "FNF Controls Layer", Icon = "Music")]
+    [PluginFeature (Name = "FNF Controls Layer", Icon = "Controller")]
     class FnfControlsBrushProvider : LayerBrushProvider {
         private readonly IWebServerService webServerService;
 

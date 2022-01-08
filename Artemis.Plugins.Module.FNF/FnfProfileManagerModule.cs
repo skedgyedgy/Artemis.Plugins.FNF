@@ -7,7 +7,7 @@ using System.Linq;
 using Newtonsoft.Json;
 
 namespace Artemis.Plugins.Module.FNF {
-    [PluginFeature (Name = "FNF Profile Manager", Icon = "Music")]
+    [PluginFeature (Name = "FNF Profile Manager", Icon = "PersonAdd")]
     public class FnfProfileManagerModule : PluginFeature {
         private readonly IWebServerService webServerService;
         private readonly IProfileService profileService;
