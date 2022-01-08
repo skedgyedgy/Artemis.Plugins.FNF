@@ -3,8 +3,9 @@
   "Name": "Friday Night Funkin' Integration",
   "Description": "pretty lights for beep boop game",
   "Author": "skedgyedgy",
-  "Website": null,
+  "Website": "https://gamebanana.com/mods/347063",
   "Repository": "https://github.com/skedgyedgy/Artemis.Plugins.FNF",
-  "Version": "1.2.1",
-  "Main": "Artemis.Plugins.Module.FNF.dll"
+  "Version": "1.3",
+  "Main": "Artemis.Plugins.Module.FNF.dll",
+  "Icon": "Music"
 }
